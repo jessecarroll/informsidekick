@@ -1,0 +1,851 @@
+NOTE: Because all of the data used to perform automated tests is so voluminous and multiline in nature, it's not possible to maintain it when it's inside of java testing code, so many of the tests are laid out here and then copied and translate over into the test source files.  Sloppy, I know... I may work something better out if future development occurs.
+
+***********************************************
+InformEntity test data
+***********************************************
+
+   Class ! j00 are d00m3d LOL!
+evilClass(10) with
+  isParserDoomed 1, initial "What?! Who's there?" class ! does; the; has; the;
+ ! a comment^";
+  ORLibClass   evilClass1
+evilClass2;
+
+Object
+      -> ->-> wickedClassy1 ! has brackets [ and comments with "quotes
+"parsing with class; has to be done!!!" has
+light static
+  ! with whole lines of comments
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function.";
+ ! a comment^";
+],
+initial [; print "]It's all valid Inform, really"; ],
+class evilClass1 ORLibClass
+  evilClass2;
+
+Object Machine "Machine room" with
+description "This room is practically littered with machines, devices,
+gizmos, gimmicks, thingumabobs, thingumajigs... damn, I should get
+either an education or a thesaurus!",
+n_to Monsters_room,
+e_to Doctor,
+has light;
+
+WickedClass
+      -> ->-> -> wickedClassy2
+does_indeed_have_a_parent has
+light static
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function."; ],
+initial [; print "]It's all valid Inform, really"; ],
+found_in diningRoom Kitchen Ballroom
+class evilClass1 ORLibClass
+  evilClass2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***********************************************
+Parser Test Data
+***********************************************
+
+Constant Story "Rewind";
+Constant Headline "^An Interactive Fiction experiment by me.^";
+
+Constant INTRO 0;
+Constant F_INTRO_PHASE 0;
+Constant F_KNOWS_ABOUT_BATHROOM_NOISES 1;
+
+Global GamePhase = INTRO;
+
+Object -> MalformedChild "orphan";
+
+Toyroom Toyshop "Toyshop",
+  with description
+          "The centre of a long east-west hall. Shelves are lined
+           with toys, painted clowns face you from the walls and
+           the floor is lightly padded with colourful mats. A doorway
+           leads north, with a red warning triangle above it.",
+       name "clowns" "painted" "shelves" "triangle",
+       e_to East_End, w_to West_End, n_to Danger_Zone;
+
+Class Toyroom
+  has  light;
+
+Toyroom Toyshop "Toyshop" with
+  description
+          "The centre of a long east-west hall. Shelves are lined
+           with toys, painted clowns face you from the walls and
+           the floor is lightly padded with colourful mats. A doorway
+           leads north, with a red warning triangle above it.",
+       name "clowns" "painted" "shelves" "triangle",
+       e_to East_End, w_to West_End, n_to Danger_Zone;
+
+Toyroom -> InnerToyshop "Toyshop";
+
+Object YourBathroom "Your Bathroom"
+  with
+  e_to YourHallway,
+  name 'ceiling' 'south' 'north' 'floor',
+  has light;
+
+CompassDirection n_obj "north wall" compass
+  with name 'n' 'north' 'wall', door_dir n_to;
+
+CompassDirection s_obj "south wall" compass
+  with name 's' 'south' 'wall', door_dir s_to;
+
+Object -> ZMyBathroomWall
+  with
+  name 'wall'
+  has scenery; ! should be able to handle comments that start outside of an entity but not at the start of the line
+
+Object ring "bathtub ring" bathtub with name 'ring';
+
+Object -> bathtub
+  with
+  name 'tub' 'bathtub'
+  has enterable container;
+
+Object soap bathtub;
+
+Object;
+
+Object -> -> magnets "refrigerator magnets"
+  with name 'poetry' 'magnet' 'magnets',
+  lastReadPoem, poem
+  has static;
+
+Object ->-> -> "Speck of Dirt" with found_in bogusParent1 magnets wickedClassy1 bogusParent2;
+
+Object
+      -> ->-> wickedClassy1 ! has brackets [ and comments with "quotes
+"parsing with class; has to be done!!!" has
+light static
+  ! with whole lines of comments
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function.";
+ ! a comment^";
+],
+initial [; print "]It's all valid Inform, really"; ],
+;
+
+Object -> ->-> wickedClassy2 ! has brackets [ and comments with "quotes
+"inherits from invalid classes!" has
+light static
+  ! with whole lines of comments
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function.";
+ ! a comment^";
+],
+initial [; print "]It's all valid Inform, really"; ],
+class evilClass1 ORLibClass
+  evilClass2;
+
+Object ->->->-> "still has";
+Object ->->->-> "children";
+
+Object -> TowelRack "towel rack",
+  with
+  name 'towel' 'rack'
+  has static;
+  
+
+
+Object towel "towel" TowelRack;
+
+Object shampoo bathtubb;
+
+
+Object bathroomVoiceTopics "bathroom voice topics";
+Object -> t_disasterarea with name 'disaster' 'area' 'concert';
+Object t_fridge bathroomVoiceTopics with name 'fridge' 'refrigerator';
+Object -> t_name with name 'herself' 'name' 'christine';
+
+[ KnockSub;
+  if (noun == 0) "You need to specify something to knock on.";
+  print "RAP RAP RAP!  You knock on ", (the) noun, ".^";
+]; ! should be able to handle comments that start outside of an entity but not at the start of the line
+Verb 'knock'
+  * -> Knock
+  * 'on' noun -> Knock;
+
+Array    task_scores  -> 1 1 1 1 1 1;
+
+[ TalkSub;
+  if (noun has talkable)
+  {
+    if (RunLife(noun,##Talk) ~= 0) rfalse;
+    print "All attempts fail to meaningfully converse with ", (the) noun, ".^";
+  }
+  else
+    print noun, " is incapable of speech.^";
+];
+Verb 'talk'
+  * 'to' noun -> Talk;
+
+
+Should produce tree (without special nodes):
+
+bathroomVoiceTopics
+  t_disasterarea
+  t_fridge
+  t_name
+Compass
+  n_obj
+  s_obj
+MalformedChild
+ring
+shampoo
+Toyshop
+  InnerToyshop
+wickedClassy2
+YourBathroom
+  bathtub
+    magnets
+      Speck of Dirt
+      wickedClassy1
+        Speck of Dirt
+    soap
+  TowelRack
+    towel
+  ZMyBathroomWall
+
+
+Should produce tree (with special nodes):
+
+bathroomVoiceTopics
+  t_disasterarea
+  t_fridge
+  t_name
+Compass
+  n_obj
+  s_obj
+MalformedChild
+ring
+shampoo
+Toyshop
+  InnerToyshop
+YourBathroom
+  bathtub
+    magnets
+      Speck of Dirt
+      wickedClassy1
+        Speck of Dirt
+    soap
+  TowelRack
+    towel
+  ZMyBathroomWall
+Classes
+  CompassDirection
+    n_obj
+    s_obj
+  Toyroom
+    Toyshop
+    InnerToyshop
+Constants
+  F_INTRO_PHASE
+  F_KNOWS_ABOUT_BATHROOM_NOISES
+  Headline
+  INTRO
+  Story
+Globals
+  GamePhase
+Functions
+  KnockSub
+  TalkSub
+Verbs
+  knock
+  talk
+
+
+===============================================
+testSpecialNodesOnTop
+===============================================
+Classes
+  CompassDirection
+    n_obj
+    s_obj
+  Toyroom
+    Toyshop
+    InnerToyshop
+Constants
+  F_INTRO_PHASE
+  F_KNOWS_ABOUT_BATHROOM_NOISES
+  Headline
+  INTRO
+  Story
+Globals
+  GamePhase
+Functions
+  KnockSub
+  TalkSub
+Verbs
+  knock
+  talk
+bathroomVoiceTopics
+  t_disasterarea
+  t_fridge
+  t_name
+MalformedChild
+ring
+shampoo
+Toyshop
+  InnerToyshop
+YourBathroom
+  bathtub
+    magnets
+      Speck of Dirt
+      wickedClassy1
+        Speck of Dirt
+    soap
+  TowelRack
+    towel
+  ZMyBathroomWall
+
+
+===============================================
+testParseWorkerAlphabetic
+===============================================
+
+Uses test data above.
+
+Expected results:
+
+bathroomVoiceTopics
+bathtub
+children
+InnerToyshop
+magnets
+MalformedChild
+n_obj
+ring
+s_obj
+shampoo
+soap
+Speck of Dirt
+still has
+t_disasterarea
+t_fridge
+t_name
+towel
+TowelRack
+Toyshop
+wickedClassy1
+wickedClassy2
+YourBathroom
+ZMyBathroomWall
+
+
+===============================================
+testParseWorkerPlayerThedarkCompassBehavior
+===============================================
+
+Standard scenario where the default player object is retained and is given an inventory
+by moving objects into it.  A special node called 'Player' is used to provide a sensible
+place to put these objects.  Move commands referring to invalid objects should not affect
+the result.  During the Initialise function, "self" is an alias for "player".
+
+Also included is a quick test of the compass node, which works much like thedark and player.
+
+Object  dictionary "Waldeck's Mayan dictionary";
+Object  map "sketch-map of Quintana Roo";
+Object  sodium_lamp "sodium lamp";
+[ Initialise;
+  TitlePage();
+  location = Forest;
+  move map to player;
+  move nonobject to player;
+  move sodium_lamp to self;
+  move nonobject to nonplayer;
+  move dictionary to player;
+  StartDaemon(sodium_lamp);
+  thedark.description =
+      "The darkness of ages presses in on you, and you feel
+       claustrophobic.";
+  "^^^Days of searching, days of thirsty hacking through the briars of
+   the forest, but at last your patience was rewarded. A discovery!^";
+];
+CompassDirection n_obj "north wall" compass
+  with name 'n' 'north' 'wall', door_dir n_to;
+
+
+Expected result:
+Compass
+  n_obj
+Player
+  dictionary
+  map
+  sodium_lamp
+
+
+The default player object is given some items using the 'move' command, but then the
+it is replaced by a custom player object.  Because the 'player' identifier no longer
+refers to the default player object (indeed, it is no longer possible to access the
+default player object after assigning a new value to 'player'), none of the items that
+were parented to the default player object will be present in the tree unless they are
+explicitly moved into the custom player object (either before or after assigning 'player'
+to refer to it).  Trying to assign a non-existent object to 'player' should not affect
+the result.  Trying to move non-existent items into the player object should not affect
+the result.
+
+Object  dictionary "Waldeck's Mayan dictionary";
+Object  map "sketch-map of Quintana Roo";
+Object  sodium_lamp "sodium lamp";
+Object customPlayer "custom player";
+Object auntThingy;
+Object -> hat;
+Object -> "Notebook";
+Object -> axe;
+[ Initialise;
+  TitlePage();
+  location = Forest;
+  move map to customPlayer;
+  move gurglefluncheon to player;
+  move zarphglof to customPlayer;
+  move sodium_lamp to player;
+  move dictionary to player;
+  player = customPlayer;
+  player = noobjecthere;
+  move dictionary to player;
+  StartDaemon(sodium_lamp);
+  thedark.description =
+      "The darkness of ages presses in on you, and you feel
+       claustrophobic.";
+  "^^^Days of searching, days of thirsty hacking through the briars of
+   the forest, but at last your patience was rewarded. A discovery!^";
+];
+
+Expected result:
+customPlayer
+  axe
+  dictionary
+  hat
+  map
+  Notebook
+
+
+
+===============================================
+testParseWorkerFunctionsBehavior
+===============================================
+
+The tricky part about finding functions is that you need some context that extends beyond
+a single line in order to know whether you've found an anonymous function defined in the
+body of an object or class definition (which you don't want to include in the tree) or
+a named function defined outside of an object or class definition (which does need to go
+in the tree).
+
+The root of the problem, really, is that Inform has the worst, most ambiguous function
+definition syntax I've ever seen in a high-level programming language.  Take this simple
+function for example:
+
+[ a b c;
+  statement1;
+  statement2;
+  statement3;
+];
+
+If it occurs in an object/class definition, 'a', 'b', and 'c' are local variables.
+If it occurs outside of any object/class definition, 'a' is the name of the function and
+'b' and 'b' may be either arguments or local variables.
+
+To differentiate a named function from an anonymous one, you *have* to take into account
+whether its definition occurs in or out of an object/class definition, so this test data
+is designed to verify the parser's ability to remember where it is so it can disregard
+anonymous functions.
+
+
+Class Toyroom
+  has  light;
+
+Toyroom West_End "West End"
+  with name "soldiers" "model" "aircraft" "planes",
+       description
+          "The western end of the toyshop is blue, and soldiers and
+           model aircraft line the shelves; a small office lies to
+           the south.",
+       before
+       [wicked to the core;
+         print "This should throw the parser for a loop!"
+       ],
+       e_to Toyshop, s_to Office;
+
+Class  Block
+  with description "Just a child's building block, four inches on a side.",
+
+       !   The parse_name routine below ensures that "take blocks"
+       !   works correctly:
+
+       parse_name
+       [ i j;
+         for (::)
+         {   j=NextWord();
+             if (j=='block' or 'cube' or 'building' or (self.name)) i++;
+             else
+             {   if (j=='blocks' or 'cubes')
+                 {   parser_action=##PluralFound; i++; }
+                 else return i;
+             }
+         }
+       ],
+
+       describe
+       [ c d e;
+           d = child(self);
+           while (d~=0 && d ofclass Block)
+           {   c++; e=d; d=child(d); }
+           if (c==0) rfalse;
+           print "^There is a pile of building blocks here, ";
+           while (c>=0)
+           {   print (address) e.name;  ! Sneaky: print the "name" out
+               if (c>0) print " on ";   ! using its dictionary address
+               c--; e=parent(e);
+           }
+           ".";
+       ],
+       before
+       [ c;
+         PutOn:
+           if (second ofclass Block)
+           {   if (child(second)~=0 && child(second) ofclass Block)
+                   "There's no room on the top of one cube for two more, side
+                    by side.";
+           }
+           else
+               print "(They're really intended
+                      to be piled on top of each other.)^";
+           c=second; while (c ofclass Block) c=parent(c);
+           if (c~=location or mantelpiece) "Too unsteady a base.";
+       ],
+       after
+       [ c stack;
+         PutOn:
+           stack=noun;
+           while (parent(stack) ofclass Block) { stack=parent(stack); c++; }
+           if (c<2)
+           {   if (Chris has general) rtrue;
+               rfalse;
+           }
+           if (c==2) "The pile of three cubes is unsteady, but viable.";
+           if (Chris has general)
+           {   Achieved(3);
+               "^Expertly he keeps the pile of four cubes stable.";
+           }
+           stack=noun;
+           while (parent(stack) ofclass Block)
+           {   c=stack; stack=parent(stack); move c to location; }
+           "The pile of four cubes wobbles, wobbles, steadies... and suddenly
+            collapses!";
+         Take:
+           stack=child(noun); if (stack==0) rfalse;
+           while (stack~=0)
+           { c=stack; stack=child(stack); move c to location; }
+           "Your pile of cubes is collapsed as a result.";
+       ],
+  has  supporter;
+
+Block -> "green cube"
+  with name "green";
+
+[ PrintTaskName achievement a b c d;
+  switch(achievement)
+  {   0: "eating a sweet";
+      1: "driving the car";
+      2: "shutting out the draught";
+      3: "building a tower of four";
+      4: "seeing which way the mantelpiece leans";
+      5: "writing on the blackboard";
+  }
+];
+
+Object Chris "Christopher"
+  with name "child" "boy" "chris" "christopher",
+       describe
+       [;  print "^A boy called Christopher sits here";
+           if (child(Chris) ~= nothing)
+               print ", playing with ", (a) child(Chris);
+           ".";
+       ],
+       life
+       [ x;
+           Ask:
+              switch(second)
+              {   'juggling', 'fluorescent', 'ball': "~That's mine!~";
+                  'helium', 'balloon': "Christopher yawns.";
+                  'cube', 'cubes': "~Bet I can make a higher tower than you.~";
+                  'toys', 'toyshop': "~Isn't it fabulous here?~";
+                  default: "~Dunno.~";
+              }
+           Answer:
+              switch(noun)
+              {   'hello', 'hallo', 'hi':
+                       "~Hello,~ says Christopher cheerfully.";
+                  default: "Christopher seems preoccupied.";
+              }
+           Attack: remove self;
+             "Christopher makes a run for it, effortlessly slipping past you!";
+           Kiss: "~That's soppy, that is.~";
+           Give:
+             if (noun==balloon) "He's too bored by the balloon.";
+             x=child(Chris);
+             if (x~=0)
+             {   move x to location;
+                 print "He forgets about ", (the) x, " and ";
+             }
+             else print "He ";
+             print "eagerly grabs ", (the) noun; move noun to Chris; ".";
+       ],
+       orders
+       [;  Drop: if (noun in Chris) "~Won't!  It's mine!~";
+           Take: "Christopher can't be bothered.";
+           Give: if (second==player) "~Get your own!~";
+           Go: "~But I like it here!~";
+           PutOn: if (noun notin Chris) "He is mightily confused.";
+                 if (~~(noun ofclass Block && second ofclass Block))
+                     "He can't see the point of this.";
+                 print "Christopher leans over with great concentration
+                     and does so.^";
+                 move noun to player; give self general;
+                 <PutOn noun second>;
+                 give self ~general; rtrue;
+       ],
+       each_turn
+       [;  if (random(3)~=1) rtrue;
+           print "^Christopher ";
+           switch(random(4))
+           {  1: "yawns.";     2: "frowns.";
+              3: "stretches."; 4: "hums tonelessly.";
+           }
+       ],
+  has  animate proper transparent;
+
+Object "fluorescent juggling ball" Chris
+  with initial "On the floor is a fluorescent juggling ball!",
+       name "fluorescent" "juggling" "ball",
+       description "It glows with soft light."
+  has  light;
+
+
+Expected result:
+Chris
+  fluorescent juggling ball
+West_End
+  green cube
+Functions
+  PrintTaskName
+
+
+
+===============================================
+testParseWorkerVerbsBehavior
+===============================================
+^(verb|extend)(\s+\w+)*((\s+['"]\w+['"])+)
+
+[ WakeUpSub;
+  "This is not some lame dream sequence.";
+];
+Extend 'wake' replace
+  * -> WakeUp
+  * 'up' -> WakeUp;
+
+Verb 'yell' 'scream' 'holler'
+  * -> Shout
+  * 'to'/'at' noun -> Shout;
+Extend only 'shout' replace
+  * -> Shout
+  * 'to'/'at' noun -> Shout;
+
+Verb 'knock'
+  * -> Knock
+  * 'on' noun -> Knock;
+
+[ TalkSub;
+  if (noun has talkable)
+  {
+    if (RunLife(noun,##Talk) ~= 0) rfalse;
+    print "All attempts fail to meaningfully converse with ", (the) noun, ".^";
+  }
+  else
+    print noun, " is incapable of speech.^";
+];
+Verb 'talk'
+  * 'to' noun -> Talk;
+
+Verb 'knock'
+  * -> Knock
+  * 'on' noun -> Knock;
+
+Extend replace 'knock'
+  * -> Knock
+  * 'on' noun -> Knock;
+
+
+
+
+Expected result:
+Functions
+  TalkSub
+  WakeUpSub
+Verbs
+  holler
+  knock
+  scream
+  shout
+  talk
+  wake
+  yell
+
+
+===============================================
+testAlphabeticalOverridesAnalyzeInit
+===============================================
+
+If displaying a flat, alphabetical list, 'move' commands in the 'Initialise' function
+should not be taken into account, even if the option to do so is turned on.
+
+Object  dictionary "Waldeck's Mayan dictionary";
+Object  map "sketch-map of Quintana Roo";
+Object  sodium_lamp "sodium lamp";
+[ Initialise;
+  TitlePage();
+  location = Forest;
+  move map to player;
+  move nonobject to player;
+  move sodium_lamp to player;
+  move nonobject to nonplayer;
+  move dictionary to player;
+  StartDaemon(sodium_lamp);
+  thedark.description =
+      "The darkness of ages presses in on you, and you feel
+       claustrophobic.";
+  "^^^Days of searching, days of thirsty hacking through the briars of
+   the forest, but at last your patience was rewarded. A discovery!^";
+];
+
+Expected result:
+dictionary
+map
+sodium_lamp
+
+
+============================================
+testExtractEntities
+============================================
+Class ! j00 are d00m3d LOL!
+evilClass(10) with
+  isParserDoomed 1, initial "What?! Who's there?" class ! does; the; has; the;
+ ! a comment^";
+  ORLibClass   evilClass1
+evilClass2;
+
+Object
+      -> ->-> wickedClassy1 ! has brackets [ and comments with "quotes
+"parsing with class; has to be done!!!" has
+light static
+  ! with whole lines of comments
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function.";
+ ! a comment^";
+],
+initial [; print "]It's all valid Inform, really"; ],
+class evilClass1 ORLibClass
+  evilClass2;
+
+No Comments:
+Object
+      -> ->-> wickedClassy1
+"parsing with class; has to be done!!!" has
+light static
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function.";
+],
+initial [; print "]It's all valid Inform, really"; ],
+class evilClass1 ORLibClass
+  evilClass2;
+
+Simplified:
+Object
+      -> ->-> wickedClassy1
+ has
+light static
+
+with name 'wicked' 'devious' 'horrible',
+description ,
+before ,
+initial ,
+class evilClass1 ORLibClass
+  evilClass2;
+
+
+Object Machine "Machine room" with
+description "This room is practically littered with machines, devices,
+gizmos, gimmicks, thingumabobs, thingumajigs... damn, I should get
+either an education or a thesaurus!",
+n_to Monsters_room,
+e_to Doctor,
+has light;
+
+WickedClass
+      -> ->-> -> wickedClassy2
+does_indeed_have_a_parent has
+light static
+with name 'wicked' 'devious' 'horrible',
+description "[This is not the beginning of a function block",
+before [; print "But this is inside of a function."; ],
+initial [; print "]It's all valid Inform, really"; ],
+found_in diningRoom Kitchen Ballroom
+class evilClass1 ORLibClass
+  evilClass2;
+
+
+============================================
+testFoundIn
+============================================
+Exercises the parser's ability to properly construct a tree containing an object
+with a found_in property and which might also have children of its own.
+
+Object bridge with found_in north_side south_side;
+Object troll bridge;
+Object axe troll;
+Object ball_of_string troll;
+Object north_side;
+Object-> waypost;
+Object south_side;
+
+Should produce this tree:
+
+north_side
+  bridge
+    troll
+      axe
+      ball_of_string
+  waypost
+south_side
+  bridge
+    troll
+      axe
+      ball_of_string

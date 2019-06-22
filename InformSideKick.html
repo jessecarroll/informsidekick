@@ -1,0 +1,98 @@
+<html>
+
+<head>
+  <title>InformSideKick Help</title>
+  <style>
+    <!--
+    ul, ol { margin-top: 0; }
+    h2 { margin: 0; }
+    .inset {margin-left: 2ex; }
+    -->
+  </style>
+</head>
+
+<body>
+  <h1>InformSideKick</h1>
+
+  <div class='inset'>
+  Provides a SideKick parser for Inform source files, allowing game objects to be viewed in a tree whose structure resembles their logical hierarchical arrangement.  If you have no idea what the heck I'm talking about, Inform is a popular programming language for creating interactive fiction games (more crudely known as "text adventures").  For more information about programming games with Inform, visit <a href="http://www.inform-fiction.org/">www.inform-fiction.org</a> and <a href="http://www.firthworks.com/roger/index.html">Roger Firth's IF pages</a>.  If you would like to see InformSideKick in action but don't have any source files of your own, you can download example games at <a href="http://www.inform-fiction.org/examples">www.inform-fiction.org/examples</a>.
+  </div><br>
+
+  <h2>Additional Features:</h2>
+  <ul>
+    <li>Provides proper folding data to the SideKick folding mode, allowing most multi-line entities to be collapsed.</li>
+    <li>Can use SideKick's completion interface to suggest object attributes provided by the Inform Library.</li>
+    <li>Catches a very limited number of coding errors.</li>
+  </ul><br>
+  
+  <h2>Limitations:</h2>
+  <ul>
+    <li>If your objects depend upon include files to provide other objects and entities, this may result in inaccuracies in the tree because included files are not examined by the parser.</li>
+    <li>The parser can be very sensitive to syntax errors.  For example, if you forget the semicolon at the end of an object, this will result in an innaccurate tree representation of your file.</li>
+  </ul><br>
+  
+  <h2>Tree Icons:</h2>
+  <div class='inset'>Icons placed next to tree nodes make it easy to tell at a glance what kind of objects you're looking at.<br><br>
+  
+    Key:<br>
+    <img src="./icons/gold.gif"> Objects that have been given an identifier and therefore may be referred to by name elsewhere in your code.  The textual description of the object, if present, is displayed in jEdit's status bar when the mouse hovers over one of these nodes.<br>
+
+    <img src="./icons/gray.gif"> Objects that have only been given a textual description.<br>
+    
+    <img src="./icons/gold_empty.gif"> Objects that are found in multiple locations, which is accomplished by using the "found_in" property as described in the Inform Designer's Manual.<br>
+
+    <img src="./icons/red.gif"> A malformed object.<br>
+
+    <img src="./icons/green.gif"> A special node.  Special nodes are nodes representing constants, classes, globals, functions, and verbs.  They are off by default and must be turned on in InformSideKick's option panel, which is accessed via jEdit's menubar (Plugins -> Plugin Options).<br>
+
+    <img src="./icons/blue.gif"> The player object.<br>
+
+    <img src="./icons/dark.gif"> The dark object.<br>
+
+    <img src="./icons/compass.gif"> The compass object.<br>
+  </div><br>
+
+  <h2>Alphabetical View:</h2>
+  <div class='inset'>By default, objects are placed in a hierarchical structure, but you can also view them in a flat alphabetical list.  To switch between views, use the menu items in the Plugins->InformSideKick menu.</div><br>
+  
+  <h2><a name="malformed">Malformed Objects:</a></h2>
+  <div class='inset'>
+  Under a limited number of conditions, the parser can detect when certain parts of the code in the buffer doesn't make <em>logical</em> sense.  It does <strong>not</strong> detect syntax errors, but rather detects when syntactically correct code does not make sense given the rules of the Inform Library.  An object is considered to be malformed if:</div>
+  
+  <ol>
+    <li>Both arrows and a named-parent are present in the header section of an object declaration.  It forbidden to both explicity name a parent <em>and</em> use the arrows method of specifying the object's place in the hierarchy.</li>
+    
+    <li>The arrow level of an object is too high to make it the child of any already parsed object.  Example: suppose your unrealistically-short source file consists of <br><br>
+    <code>
+      Object o1;<br>
+      Object -> -> o2;
+    </code><br><br>
+      
+    Object 'o2' has 2 arrows, but since no previous object has been defined with only 1 arrow, it's not at all clear which object (if any) should be o2's parent.  While it's true that the Inform compiler does not reject this as a compile-time error, there's really no way to meaningfully place this object into the hierarchy, so the a red flag is raised when this condition is encountered.</li>
+    
+    <li>An object's parent is specified by name, but the parent has not been previously defined.</li>
+  </ol><br>
+  
+  <h2><a name="parseroptions">Parser Options:</a></h2>
+  <div class='inset'>
+  InformSideKick places an options panel in jEdit's plugin options window; it can be accessed by navigating to "Plugin -> Plugin Options" in the main menu bar and selecting InformSideKick from the list.  Here is a summary of options:</div> 
+  <ul>
+  
+    <li><strong>special nodes position</strong> lets you specify whether special nodes are displayed before or after the main object hierarchy.  By default, special nodes are located below the object nodes.</li>
+    
+    <li><strong>show classes/constants/functions/globals/verbs</strong> lets you turn individual special nodes on and off.  Having them on can make parsing marginally slower, but the performance hit is not generally noticeable on modern CPUs.  All the same, they are turned off by default.</li>
+    
+    <li><strong>analyze 'Initialise' function</strong> causes the parser to look for the presence of the 'Initialise' function, which is a special function executed by the Inform Library at the start of a game; authors often use it to set up the initial state of the game world.  If this function is present, activating this option makes the parser examine the body of the function and look for any 'move' statements.  If any are found, the object tree is rearranged to reflect the state of the game world after the move command is executed.</li>
+    
+    <li><strong>report malformed objects via ErrorList</strong> tells the parser to use the ErrorList plugin to alert you when it detects a <a href="#malformed">malformed object</a> during the parse, which lets you see an explanation of why the parser thinks the object is malformed.</li>
+  </ul><br>
+
+  <h2>Credits:</h2>
+  <div class='inset'>
+    Programmed by Jesse Carroll (jcarroll@excite.co.jp).<br>
+    Huge thanks to Scott Hardwick (scott.hardwick@gmail.com) for contributing design ideas, encouragement, and extensive testing.
+  </div>  
+  
+</body>
+
+</html>

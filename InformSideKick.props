@@ -1,0 +1,33 @@
+plugin.sidekick.inform.InformSideKickPlugin.name=InformSideKick
+plugin.sidekick.inform.InformSideKickPlugin.author=Jesse Carroll
+plugin.sidekick.inform.InformSideKickPlugin.version=1.0
+plugin.sidekick.inform.InformSideKickPlugin.docs=InformSideKick.html
+plugin.sidekick.inform.InformSideKickPlugin.depend.0=jdk 1.4.2
+plugin.sidekick.inform.InformSideKickPlugin.depend.1=jedit 04.02.08.00
+plugin.sidekick.inform.InformSideKickPlugin.depend.2=plugin errorlist.ErrorListPlugin 1.3.1
+plugin.sidekick.inform.InformSideKickPlugin.depend.3=plugin sidekick.SideKickPlugin 0.3
+plugin.sidekick.inform.InformSideKickPlugin.activate=defer
+sidekick.parser.inform.label=inform
+mode.inform.sidekick.parser=inform
+
+# options
+plugin.sidekick.inform.InformSideKickPlugin.option-pane=informsidekick
+options.informsidekick.label=InformSideKick
+options.informsidekick.code=new sidekick.inform.InformOptionPane()
+options.informsidekick.showclasses=show classes
+options.informsidekick.showconstants=show constants
+options.informsidekick.showfunctions=show functions
+options.informsidekick.showglobals=show globals
+options.informsidekick.showverbs=show verbs
+options.informsidekick.analyzeinit=analyze 'Initialise' function
+options.informsidekick.displayerrors=report malformed objects via ErrorList 
+options.informsidekick.specialNodesOnTop=special nodes position:
+
+# action labels
+informsidekick.label=InformSideKick
+informsidekick.alphabeticalView.label=Alphabetical View
+informsidekick.normalView.label=Hierarchical View
+
+# application menu items
+plugin.sidekick.inform.InformSideKickPlugin.menu=informsidekick.alphabeticalView \
+informsidekick.normalView

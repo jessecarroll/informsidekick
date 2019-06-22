@@ -1,0 +1,80 @@
+<project name="InformSideKick" default="dist" basedir=".">
+
+  <property file="build.properties"/>
+  <property name="jar.name"  value="${ant.project.name}.jar"/>
+  <property name="src.dir" value="${basedir}"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="build.classes" value="${build.dir}/classes" />
+
+  <path id="project.class.path">
+	  <pathelement location="${jedit.install.dir}/jedit.jar"/>
+	  <pathelement location="icons/**/*.gif"/>
+	  <pathelement location="."/>
+    <fileset dir="${install.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="clean"
+    description="Deletes all built files">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${build.classes}" />
+    <javac
+      srcdir="${src.dir}"
+      destdir="${build.classes}"
+      excludes="**/Test*.java"
+      deprecation="on"
+      target="1.4"
+      source="1.4">
+      <classpath refid="project.class.path"/>
+    </javac>
+  </target>
+
+  <target name="dist" depends="compile"
+    description="Creates a distributable jar in ${install.dir}" >
+    <mkdir dir="${install.dir}"/>
+    <jar jarfile="${install.dir}/${ant.project.name}.jar">
+      <fileset dir="${src.dir}">
+        <include name="icons/**" />
+        <include name="*.xml"/>
+        <include name="*.html"/>
+        <include name="*.css"/>
+        <include name="${ant.project.name}.props" />
+      </fileset>
+      <fileset dir="${build.classes}">    
+        <include name="**/*.class" />
+        <exclude name="**/Test*.class" />
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="srcdist"
+    description="Creates a distributable source archive in ${install.dir}" >
+    <mkdir dir="${basedir}/${ant.project.name}"/>
+    <copy todir="${basedir}/${ant.project.name}">
+      <fileset dir="${basedir}">
+        <include name="*.*"/>
+        <include name="icons/**" />
+        <include name="lib/**" />
+        <include name="sidekick/**" />
+        <exclude name="*.zip"/>
+        <exclude name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${install.dir}"/>
+    <zip destfile="${install.dir}/${ant.project.name}Src.zip">
+      <fileset dir="${basedir}">
+        <include name="${ant.project.name}/**/*"/>
+      </fileset>
+    </zip>
+
+    <delete dir="${basedir}/${ant.project.name}"/>
+
+  </target>
+
+</project>
